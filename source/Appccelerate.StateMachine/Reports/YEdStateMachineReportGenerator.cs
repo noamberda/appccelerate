@@ -127,7 +127,7 @@ namespace Appccelerate.StateMachine.Reports
         private static string CreateEntryActionDescription(IState<TState, TEvent> state)
         {
             return state.EntryActions.Any() 
-                       ? (state.EntryActions.Aggregate("(", (aggregate, action) => (aggregate.Length > 1 ? aggregate + ", " : aggregate) + action.Describe()) + ")" + Environment.NewLine) 
+                       ? (state.EntryActions.Aggregate("(", (aggregate, action) => (aggregate.Length > 1 ? aggregate + ", " : aggregate) + action.ActionHolder.Describe()) + ")" + Environment.NewLine) 
                        : string.Empty;
         }
 

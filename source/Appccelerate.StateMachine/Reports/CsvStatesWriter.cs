@@ -70,7 +70,7 @@ namespace Appccelerate.StateMachine.Reports
 
         private void ReportState(IState<TState, TEvent> state)
         {
-            string entry = FormatHelper.ConvertToString(state.EntryActions.Select(action => action.Describe()), ", ");
+            string entry = FormatHelper.ConvertToString(state.EntryActions.Select(action => action.ActionHolder.Describe()), ", ");
             string exit = FormatHelper.ConvertToString(state.ExitActions.Select(action => action.Describe()), ", ");
             string children = FormatHelper.ConvertToString(state.SubStates.Select(s => s.Id.ToString()), ", ");
 

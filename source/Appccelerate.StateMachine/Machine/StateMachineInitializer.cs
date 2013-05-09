@@ -41,10 +41,18 @@ namespace Appccelerate.StateMachine.Machine
             this.context = context;
         }
 
-        public IState<TState, TEvent> EnterInitialState()
+        public IState<TState, TEvent> EnterInitialState(bool start)
         {
             var stack = this.TraverseUpTheStateHierarchy();
-            this.TraverseDownTheStateHierarchyAndEnterStates(stack);
+
+            if (start)
+            {
+                this.TraverseDownTheStateHierarchyAndStartStates(stack);
+            }else
+            {
+                this.TraverseDownTheStateHierarchyAndEnterStates(stack);
+            }
+            
 
             return this.initialState.EnterByHistory(this.context);
         }
@@ -73,6 +81,15 @@ namespace Appccelerate.StateMachine.Machine
             {
                 IState<TState, TEvent> state = stack.Pop();
                 state.Entry(this.context);
+            }
+        }
+
+        private void TraverseDownTheStateHierarchyAndStartStates(Stack<IState<TState, TEvent>> stack)
+        {
+            while (stack.Count > 0)
+            {
+                IState<TState, TEvent> state = stack.Pop();
+                state.Start(this.context);
             }
         }
     }

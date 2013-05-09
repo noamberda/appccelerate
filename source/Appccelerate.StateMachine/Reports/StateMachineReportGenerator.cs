@@ -94,7 +94,7 @@ namespace Appccelerate.StateMachine.Reports
             report.AppendFormat(
                 "{0}entry action: {1}{2}", 
                 indentation,
-                FormatHelper.ConvertToString(state.EntryActions.Select(action => action.Describe()), ", "), 
+                FormatHelper.ConvertToString(state.EntryActions.Select(action => action.ActionHolder.Describe()), ", "), 
                 Environment.NewLine);
             
             report.AppendFormat(

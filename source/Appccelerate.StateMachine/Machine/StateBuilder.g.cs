@@ -67,21 +67,22 @@ namespace Appccelerate.StateMachine.Machine
         /// Defines entry actions.
         /// </summary>
         /// <param name="action">The action.</param>
+        /// <param name="executeOnStart">Execute on start </param>
         /// <returns>Exit action syntax.</returns>
-        IEntryActionSyntax<TState, TEvent> IEntryActionSyntax<TState, TEvent>.ExecuteOnEntry(Action action)
+        IEntryActionSyntax<TState, TEvent> IEntryActionSyntax<TState, TEvent>.ExecuteOnEntry(Action action, bool executeOnStart)
         {
             Ensure.ArgumentNotNull(action, "action");
 
-            this.state.EntryActions.Add(this.factory.CreateActionHolder(action));    
+            this.state.EntryActions.Add(new EntryActionProxy(this.factory.CreateActionHolder(action), executeOnStart));
             
             return this;
         }
 
-        public IEntryActionSyntax<TState, TEvent> ExecuteOnEntry<T>(Action<T> action)
+        public IEntryActionSyntax<TState, TEvent> ExecuteOnEntry<T>(Action<T> action, bool executeOnStart)
         {
             Ensure.ArgumentNotNull(action, "action");
 
-            this.state.EntryActions.Add(this.factory.CreateActionHolder(action));
+            this.state.EntryActions.Add(new EntryActionProxy(this.factory.CreateActionHolder(action), executeOnStart));
 
             return this;
         }
@@ -92,10 +93,11 @@ namespace Appccelerate.StateMachine.Machine
         /// <typeparam name="T">Type of the parameter of the entry action method.</typeparam>
         /// <param name="action">The action.</param>
         /// <param name="parameter">The parameter that will be passed to the entry action.</param>
+        /// <param name="executeOnStart">Execute on start</param>
         /// <returns>Exit action syntax.</returns>
-        IEntryActionSyntax<TState, TEvent> IEntryActionSyntax<TState, TEvent>.ExecuteOnEntryParametrized<T>(Action<T> action, T parameter)
+        IEntryActionSyntax<TState, TEvent> IEntryActionSyntax<TState, TEvent>.ExecuteOnEntryParametrized<T>(Action<T> action, T parameter, bool executeOnStart)
         {
-            this.state.EntryActions.Add(this.factory.CreateActionHolder(action, parameter));
+            this.state.EntryActions.Add(new EntryActionProxy(this.factory.CreateActionHolder(action, parameter), executeOnStart));
 
             return this;
         }

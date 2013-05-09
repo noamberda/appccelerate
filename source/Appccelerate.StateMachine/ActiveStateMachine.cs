@@ -283,7 +283,7 @@ namespace Appccelerate.StateMachine
         {
             Ensure.ArgumentNotNull(message, "message");
 
-            this.stateMachine.EnterInitialState();
+            this.stateMachine.EnterInitialState(true);
         }
 
         /// <summary>

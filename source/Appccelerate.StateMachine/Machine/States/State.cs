@@ -85,7 +85,7 @@ namespace Appccelerate.StateMachine.Machine.States
             this.subStates = new List<IState<TState, TEvent>>();
             this.transitions = new TransitionDictionary<TState, TEvent>(this);
 
-            this.EntryActions = new List<IActionHolder>();
+            this.EntryActions = new List<IEntryActionProxy>();
             this.ExitActions = new List<IActionHolder>();
         }
 
@@ -105,7 +105,7 @@ namespace Appccelerate.StateMachine.Machine.States
         /// Gets the entry actions.
         /// </summary>
         /// <value>The entry actions.</value>
-        public IList<IActionHolder> EntryActions { get; private set; }
+        public IList<IEntryActionProxy> EntryActions { get; private set; }
 
         /// <summary>
         /// Gets the exit actions.
@@ -237,13 +237,21 @@ namespace Appccelerate.StateMachine.Machine.States
             return result;
         }
 
+        public void Start(ITransitionContext<TState, TEvent> context)
+        {
+            Ensure.ArgumentNotNull(context, "context");
+
+            context.AddRecord(this.Id, RecordType.Start);
+            this.ExecuteEntryActions(context, true);
+        }
+
         public void Entry(ITransitionContext<TState, TEvent> context)
         {
             Ensure.ArgumentNotNull(context, "context");
 
             context.AddRecord(this.Id, RecordType.Enter);
 
-            this.ExecuteEntryActions(context);
+            this.ExecuteEntryActions(context, false);
         }
 
         public void Exit(ITransitionContext<TState, TEvent> context)
@@ -325,11 +333,21 @@ namespace Appccelerate.StateMachine.Machine.States
             }
         }
 
-        private void ExecuteEntryActions(ITransitionContext<TState, TEvent> context)
+        private void ExecuteEntryActions(ITransitionContext<TState, TEvent> context, bool start)
         {
             foreach (var actionHolder in this.EntryActions)
             {
-                this.ExecuteEntryAction(actionHolder, context);
+                if (start)
+                {
+                    if(actionHolder.ExecuteOnStart)
+                    {
+                        this.ExecuteEntryAction(actionHolder.ActionHolder, context);
+                    }   
+                }else
+                {
+                    this.ExecuteEntryAction(actionHolder.ActionHolder, context);
+                }
+                
             }
         }
 

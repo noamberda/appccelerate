@@ -78,7 +78,7 @@ namespace Appccelerate.StateMachine.Machine
         /// Gets the entry actions.
         /// </summary>
         /// <value>The entry actions.</value>
-        IList<IActionHolder> EntryActions { get; }
+        IList<IEntryActionProxy> EntryActions { get; }
 
         /// <summary>
         /// Gets the exit actions.
@@ -100,6 +100,8 @@ namespace Appccelerate.StateMachine.Machine
         ITransitionResult<TState, TEvent> Fire(ITransitionContext<TState, TEvent> context);
 
         void Entry(ITransitionContext<TState, TEvent> context);
+
+        void Start(ITransitionContext<TState, TEvent> context);
 
         void Exit(ITransitionContext<TState, TEvent> context);
 

@@ -35,4 +35,10 @@ namespace Appccelerate.StateMachine.Machine.ActionHolders
         /// <returns>Description of the action.</returns>
         string Describe();
     }
+
+    public interface IEntryActionProxy
+    {
+        IActionHolder ActionHolder { get; }
+        bool ExecuteOnStart { get; }
+    }
 }

@@ -31,6 +31,11 @@ namespace Appccelerate.StateMachine.Machine
         /// <summary>
         /// A state was exited.
         /// </summary>
-        Exit
+        Exit,
+
+        /// <summary>
+        /// A state was started.
+        /// </summary>
+        Start
     }
 }

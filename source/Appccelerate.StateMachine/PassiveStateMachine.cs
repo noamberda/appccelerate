@@ -169,7 +169,7 @@ namespace Appccelerate.StateMachine
 
             this.stateMachine.ForEach(extension => extension.EventQueued(this.stateMachine, eventId, eventArgument));
 
-            this.Execute();
+            this.Execute(false);
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Appccelerate.StateMachine
 
             this.stateMachine.ForEach(extension => extension.EventQueuedWithPriority(this.stateMachine, eventId, eventArgument));
             
-            this.Execute();
+            this.Execute(false);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Appccelerate.StateMachine
             
             this.stateMachine.ForEach(extension => extension.StartedStateMachine(this.stateMachine));
 
-            this.Execute();
+            this.Execute(true);
         }
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace Appccelerate.StateMachine
         /// <summary>
         /// Executes all queued events.
         /// </summary>
-        private void Execute()
+        private void Execute(bool start)
         {
             if (this.executing || !this.IsRunning)
             {
@@ -290,7 +290,7 @@ namespace Appccelerate.StateMachine
             this.executing = true;
             try
             {
-                this.ProcessQueuedEvents();
+                this.ProcessQueuedEvents(start);
             }
             finally
             {
@@ -301,9 +301,9 @@ namespace Appccelerate.StateMachine
         /// <summary>
         /// Processes the queued events.
         /// </summary>
-        private void ProcessQueuedEvents()
+        private void ProcessQueuedEvents(bool start)
         {
-            this.InitializeStateMachineIfInitializationIsPending();
+            this.InitializeStateMachineIfInitializationIsPending(start);
 
             while (this.events.Count > 0)
             {
@@ -312,11 +312,11 @@ namespace Appccelerate.StateMachine
             }
         }
 
-        private void InitializeStateMachineIfInitializationIsPending()
+        private void InitializeStateMachineIfInitializationIsPending(bool start)
         {
             if (this.pendingInitialization)
             {
-                this.stateMachine.EnterInitialState();
+                this.stateMachine.EnterInitialState(start);
 
                 this.pendingInitialization = false;
             }
